@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planta◆360 — Embalajes SRL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0e14;--surface:#131720;--card:#1a1f2e;--border:rgba(255,255,255,0.07);
+  --text:#e8eaf0;--muted:#6b7280;--green:#00d68f;--green-dim:rgba(0,214,143,0.12);
+  --amber:#f5a623;--amber-dim:rgba(245,166,35,0.12);
+  --red:#ff4757;--red-dim:rgba(255,71,87,0.12);
+  --blue:#4a9eff;--blue-dim:rgba(74,158,255,0.12);
+  --font-head:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;min-height:100vh}
+
+/* ── TOP BAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:1px;color:var(--text)}
+.logo span{color:var(--green)}
+.topbar-div{width:1px;height:22px;background:var(--border)}
+.topbar-sub{font-family:var(--font-head);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.turno-badge{background:var(--green-dim);border:1px solid rgba(0,214,143,0.25);color:var(--green);font-family:var(--font-head);font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:1px;text-transform:uppercase}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.live::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── NAV ── */
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:0;overflow-x:auto}
+.nav-tab{padding:12px 18px;font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;user-select:none}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--green)}
+
+/* ── PAGES ── */
+.page{display:none;padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.page.active{display:flex}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:640px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.green::before{background:var(--green)}
+.kpi.amber::before{background:var(--amber)}
+.kpi.red::before{background:var(--red)}
+.kpi.blue::before{background:var(--blue)}
+.kpi-lbl{font-family:var(--font-head);font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.kpi-val{font-family:var(--font-mono);font-size:28px;font-weight:500;line-height:1}
+.kpi.green .kpi-val{color:var(--green)}
+.kpi.amber .kpi-val{color:var(--amber)}
+.kpi.red .kpi-val{color:var(--red)}
+.kpi.blue .kpi-val{color:var(--blue)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── PANEL ── */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.panel-head{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.panel-title{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.panel-badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;font-family:var(--font-head);letter-spacing:.5px;text-transform:uppercase}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,.2)}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,214,143,.2)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.2)}
+
+/* ── MACHINE GRID ── */
+.mach-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px}
+@media(min-width:600px){.mach-grid{grid-template-columns:repeat(4,1fr)}}
+.mach{border-radius:6px;padding:12px 14px;border:1px solid transparent;cursor:pointer;transition:transform .15s,border-color .15s}
+.mach:hover{transform:translateY(-1px)}
+.mach.ok{background:var(--green-dim);border-color:rgba(0,214,143,.2)}
+.mach.warn{background:var(--amber-dim);border-color:rgba(245,166,35,.2)}
+.mach.bad{background:var(--red-dim);border-color:rgba(255,71,87,.2)}
+.mach-id{font-family:var(--font-mono);font-size:14px;font-weight:500;display:flex;align-items:center;gap:5px}
+.mach.ok .mach-id{color:var(--green)}
+.mach.warn .mach-id{color:var(--amber)}
+.mach.bad .mach-id{color:var(--red)}
+.mach-name{font-size:11px;color:var(--muted);margin-top:3px}
+.mach-stat{font-family:var(--font-mono);font-size:12px;margin-top:6px}
+.mach.ok .mach-stat{color:var(--green)}
+.mach.warn .mach-stat{color:var(--amber)}
+.mach.bad .mach-stat{color:var(--red)}
+.mach-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:4px;font-family:var(--font-head);letter-spacing:.5px;text-transform:uppercase}
+.mach.ok .mach-pill{background:rgba(0,214,143,.15);color:var(--green)}
+.mach.warn .mach-pill{background:rgba(245,166,35,.15);color:var(--amber)}
+.mach.bad .mach-pill{background:rgba(255,71,87,.15);color:var(--red)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mach.ok .dot{background:var(--green);animation:pulse 2s infinite}
+.mach.warn .dot{background:var(--amber)}
+.mach.bad .dot{background:var(--red)}
+
+/* ── BAR CHART ── */
+.bar-chart{display:flex;flex-direction:column;gap:9px;padding:12px 16px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-lbl{font-family:var(--font-mono);font-size:11px;color:var(--muted);width:44px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.bar-pct{font-family:var(--font-mono);font-size:11px;width:40px;text-align:right;flex-shrink:0}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}}
+
+/* ── CRUCE LIST ── */
+.cruce-list{display:flex;flex-direction:column;gap:7px;padding:12px 16px}
+.cruce-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;border:1px solid transparent;cursor:pointer;transition:opacity .15s}
+.cruce-item:hover{opacity:.85}
+.cruce-item.bad{background:var(--red-dim);border-color:rgba(255,71,87,.15)}
+.cruce-item.warn{background:var(--amber-dim);border-color:rgba(245,166,35,.15)}
+.cruce-item.ok{background:var(--green-dim);border-color:rgba(0,214,143,.15)}
+.cruce-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.cruce-mach{font-family:var(--font-mono);font-size:12px;font-weight:500;min-width:56px}
+.cruce-item.bad .cruce-mach{color:var(--red)}
+.cruce-item.warn .cruce-mach{color:var(--amber)}
+.cruce-item.ok .cruce-mach{color:var(--green)}
+.cruce-desc{font-size:12px;color:var(--muted);flex:1;line-height:1.4}
+.cruce-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:3px;border:none;cursor:pointer;font-family:var(--font-head);letter-spacing:.5px;text-transform:uppercase}
+.cruce-item.bad .cruce-btn{background:rgba(255,71,87,.15);color:var(--red)}
+.cruce-item.warn .cruce-btn{background:rgba(245,166,35,.15);color:var(--amber)}
+.cruce-item.ok .cruce-btn{background:rgba(0,214,143,.15);color:var(--green)}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{text-align:left;padding:7px 12px;font-family:var(--font-head);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.data-table td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.pill{display:inline-block;font-family:var(--font-head);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.5px;text-transform:uppercase}
+.pill-red{background:var(--red-dim);color:var(--red)}
+.pill-amber{background:var(--amber-dim);color:var(--amber)}
+.pill-green{background:var(--green-dim);color:var(--green)}
+.pill-gray{background:rgba(255,255,255,.06);color:var(--muted)}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:14px;padding:8px 16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-family:var(--font-head);letter-spacing:.5px;text-transform:uppercase}
+.legend-dot{width:8px;height:8px;border-radius:2px}
+
+/* ── SECTION LABEL ── */
+.section-lbl{font-family:var(--font-head);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:0 0 8px 0;border-bottom:1px solid var(--border);margin-bottom:10px}
+
+/* ── SPARKLINE ── */
+.spark-wrap{padding:0 16px 12px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">PLANTA<span>◆</span>360</div>
+  <div class="topbar-div"></div>
+  <div class="topbar-sub">Embalajes SRL</div>
+  <div class="topbar-right">
+    <div class="turno-badge">Turno Mañana</div>
+    <div class="live" id="clock">En vivo</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="showPage('general',this)">Vista General</div>
+  <div class="nav-tab" onclick="showPage('produccion',this)">Producción</div>
+  <div class="nav-tab" onclick="showPage('mantenimiento',this)">Mantenimiento</div>
+  <div class="nav-tab" onclick="showPage('cruce',this)">Cruce Inteligente</div>
+</div>
+
+<!-- ══ PÁGINA 1: GENERAL ══ -->
+<div id="page-general" class="page active">
+
+  <div class="kpi-row">
+    <div class="kpi green">
+      <div class="kpi-lbl">Efic. promedio</div>
+      <div class="kpi-val">92%</div>
+      <div class="kpi-sub">F4·F5·F6 · últimos registros</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-lbl">m² totales</div>
+      <div class="kpi-val">14M+</div>
+      <div class="kpi-sub">Corrugadora + Impresoras</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-lbl">OTs atrasadas</div>
+      <div class="kpi-val">239</div>
+      <div class="kpi-sub">F4:63 · F5:98 · F6:60 · CORR:18</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Sin realizar</div>
+      <div class="kpi-val">530</div>
+      <div class="kpi-sub">Total OTs pendientes</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Estado de máquinas</div>
+      <div class="panel-badge badge-red">239 OTs atrasadas</div>
+    </div>
+    <div class="mach-grid">
+      <div class="mach ok" onclick="showPage('produccion',document.querySelectorAll('.nav-tab')[1]);alert('F5 — JS\nEficiencia: 102%\nm² producidos: 1.091.312\nOTs sin realizar: 211\nOTs atrasadas: 98')">
+        <div class="mach-id"><span class="dot"></span>F5</div>
+        <div class="mach-name">JS</div>
+        <div class="mach-stat">102% efic.</div>
+        <span class="mach-pill">OK</span>
+      </div>
+      <div class="mach ok" onclick="alert('F4 — Curioni\nEficiencia: 91%\nm² producidos: 579.269\nOTs sin realizar: 94\nOTs atrasadas: 63')">
+        <div class="mach-id"><span class="dot"></span>F4</div>
+        <div class="mach-name">Curioni</div>
+        <div class="mach-stat">91% efic.</div>
+        <span class="mach-pill">OK</span>
+      </div>
+      <div class="mach warn" onclick="alert('F6 — Quanheng\nEficiencia: 73% — por debajo del objetivo\nm² producidos: 277.695\nOTs sin realizar: 112\nOTs atrasadas: 60\nAtención: eficiencia baja')">
+        <div class="mach-id"><span class="dot"></span>F6</div>
+        <div class="mach-name">Quanheng</div>
+        <div class="mach-stat">73% efic.</div>
+        <span class="mach-pill">Observar</span>
+      </div>
+      <div class="mach bad" onclick="alert('CORRUGADORA\nEficiencia: 103%\nm² producidos: 12.332.808\nOTs sin realizar: 113\nOTs atrasadas: 18\nRégistro/rotación vence pronto')">
+        <div class="mach-id"><span class="dot"></span>CORR</div>
+        <div class="mach-name">Corrugadora</div>
+        <div class="mach-stat">18 OTs atrasadas</div>
+        <span class="mach-pill">Atención</span>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>OK — eficiencia normal</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Observar — eficiencia baja</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Atención — OTs críticas</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Ranking de eficiencia</div></div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-lbl">CORR</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
+          <span class="bar-pct" style="color:var(--green)">103%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F5</span>
+          <div class="bar-track"><div class="bar-fill" style="width:99%;background:var(--green)"></div></div>
+          <span class="bar-pct" style="color:var(--green)">102%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F4</span>
+          <div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--green)"></div></div>
+          <span class="bar-pct" style="color:var(--green)">91%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F6</span>
+          <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">73%</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">OTs atrasadas por máquina</div></div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-lbl">F5</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">98</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F6</span>
+          <div class="bar-track"><div class="bar-fill" style="width:61%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">60</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F4</span>
+          <div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">63</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">CORR</span>
+          <div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">18</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PÁGINA 2: PRODUCCIÓN ══ -->
+<div id="page-produccion" class="page" style="display:none">
+
+  <div class="kpi-row">
+    <div class="kpi green">
+      <div class="kpi-lbl">Efic. F5 (JS)</div>
+      <div class="kpi-val">102%</div>
+      <div class="kpi-sub">253 registros históricos</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">Efic. F4 (Curioni)</div>
+      <div class="kpi-val">91%</div>
+      <div class="kpi-sub">205 registros históricos</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Efic. F6 (Quanheng)</div>
+      <div class="kpi-val">73%</div>
+      <div class="kpi-sub">82 registros · Observar</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">Efic. Corrugadora</div>
+      <div class="kpi-val">103%</div>
+      <div class="kpi-sub">2.919 registros históricos</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Corrugadora — m² producidos por mes</div>
+      <div class="panel-badge badge-green">Promedio: 1.76M m²/mes</div>
+    </div>
+    <div class="bar-chart" style="gap:11px;padding:14px 16px">
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Nov 25</span>
+        <div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--muted);width:80px">1.43M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Dic 25</span>
+        <div class="bar-track"><div class="bar-fill" style="width:81%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:80px">1.91M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Ene 26</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:80px">2.36M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Feb 26</span>
+        <div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:80px">2.02M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Mar 26</span>
+        <div class="bar-track"><div class="bar-fill" style="width:99%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:80px">2.35M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">Abr 26</span>
+        <div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:80px">1.69M m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:52px">May 26</span>
+        <div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--amber)"></div></div>
+        <span class="bar-pct" style="color:var(--amber);width:80px">562k m² *</span>
+      </div>
+    </div>
+    <div style="padding:6px 16px 12px;font-size:11px;color:var(--muted)">* Mayo 26 mes en curso — dato parcial</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Impresoras — m² producidos por mes (Abr–May 2026)</div></div>
+    <div class="bar-chart" style="gap:11px;padding:14px 16px">
+      <div style="margin-bottom:4px"><span style="font-family:var(--font-head);font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.8px;text-transform:uppercase">ABRIL 2026</span></div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F5</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:74px">775.776 m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F4</span>
+        <div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--green)"></div></div>
+        <span class="bar-pct" style="color:var(--green);width:74px">464.112 m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F6</span>
+        <div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--amber)"></div></div>
+        <span class="bar-pct" style="color:var(--amber);width:74px">187.654 m²</span>
+      </div>
+      <div style="margin:10px 0 4px"><span style="font-family:var(--font-head);font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.8px;text-transform:uppercase">MAYO 2026 (parcial)</span></div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F5</span>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--blue)"></div></div>
+        <span class="bar-pct" style="color:var(--blue);width:74px">307.835 m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F4</span>
+        <div class="bar-track"><div class="bar-fill" style="width:13%;background:var(--blue)"></div></div>
+        <span class="bar-pct" style="color:var(--blue);width:74px">101.254 m²</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-lbl" style="width:32px">F6</span>
+        <div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--blue)"></div></div>
+        <span class="bar-pct" style="color:var(--blue);width:74px">58.346 m²</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Eficiencia vs Objetivo por máquina</div>
+      <div class="panel-badge badge-amber">F6 bajo umbral</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Máquina</th>
+            <th>Nombre</th>
+            <th>Objetivo m²/h</th>
+            <th>Efic. promedio</th>
+            <th>m² totales</th>
+            <th>Registros</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:var(--font-mono);font-weight:500;color:var(--green)">F5</td>
+            <td style="color:var(--muted)">JS</td>
+            <td>2.400</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">102%</td>
+            <td style="font-family:var(--font-mono)">1.091.312</td>
+            <td>253</td>
+            <td><span class="pill pill-green">OK</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);font-weight:500;color:var(--green)">CORR</td>
+            <td style="color:var(--muted)">Corrugadora</td>
+            <td>9.000</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">103%</td>
+            <td style="font-family:var(--font-mono)">12.332.808</td>
+            <td>2.919</td>
+            <td><span class="pill pill-green">OK</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);font-weight:500;color:var(--green)">F4</td>
+            <td style="color:var(--muted)">Curioni</td>
+            <td>1.800</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">91%</td>
+            <td style="font-family:var(--font-mono)">579.269</td>
+            <td>205</td>
+            <td><span class="pill pill-green">OK</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);font-weight:500;color:var(--amber)">F6</td>
+            <td style="color:var(--muted)">Quanheng</td>
+            <td>2.000</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">73%</td>
+            <td style="font-family:var(--font-mono)">277.695</td>
+            <td>82</td>
+            <td><span class="pill pill-amber">Observar</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+  <!-- GUÍA DE ACTUALIZACIÓN -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">¿Cómo actualizo estos indicadores?</div>
+      <div class="panel-badge badge-green">Guía rápida</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr><th>Indicador</th><th>Fuente</th><th>Cómo actualizarlo</th><th>Frecuencia</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--green);font-weight:500">m² por mes / año</td>
+            <td style="color:var(--muted)">Excel PROGRAMACION</td>
+            <td>Subir PROGRAMACION.xlsx actualizado a la carpeta <span style="font-family:var(--font-mono);color:var(--blue)">Planta_Looker</span> en Drive → ejecutar script en Google Sheets → pedirme el nuevo HTML</td>
+            <td style="color:var(--muted)">Mensual</td>
+          </tr>
+          <tr>
+            <td style="color:var(--green);font-weight:500">Eficiencia por máquina</td>
+            <td style="color:var(--muted)">Excel PROGRAMACION</td>
+            <td>Mismo proceso: actualizar PROGRAMACION.xlsx → script → nuevo HTML</td>
+            <td style="color:var(--muted)">Por turno o diario</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red);font-weight:500">OTs atrasadas</td>
+            <td style="color:var(--muted)">Consuman</td>
+            <td>Exportar OTs desde Consuman → guardar como <span style="font-family:var(--font-mono);color:var(--blue)">Ordenes_Consuman.xlsx</span> en carpeta Planta_Looker → script → nuevo HTML</td>
+            <td style="color:var(--muted)">Por turno</td>
+          </tr>
+          <tr>
+            <td style="color:var(--amber);font-weight:500">Sin realizar / Preventivos</td>
+            <td style="color:var(--muted)">Consuman</td>
+            <td>Mismo proceso que OTs atrasadas — viene del mismo archivo exportado</td>
+            <td style="color:var(--muted)">Por turno</td>
+          </tr>
+          <tr>
+            <td style="color:var(--blue);font-weight:500">Totales anuales 2025 / 2026</td>
+            <td style="color:var(--muted)">Excel PROGRAMACION</td>
+            <td>Se recalculan automáticamente cuando actualizás el Excel con los datos del mes nuevo</td>
+            <td style="color:var(--muted)">Mensual</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:10px 16px 12px;border-top:1px solid var(--border)">
+      <div style="font-family:var(--font-head);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Pasos para actualizar el tablero</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px">
+          <span style="font-family:var(--font-mono);color:var(--green);min-width:16px">1.</span>
+          <span style="color:var(--muted)">Subís el Excel actualizado a <span style="color:var(--text)">Drive → carpeta Planta_Looker</span></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px">
+          <span style="font-family:var(--font-mono);color:var(--green);min-width:16px">2.</span>
+          <span style="color:var(--muted)">Exportás OTs de Consuman y la subís también a <span style="color:var(--text)">Planta_Looker</span></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px">
+          <span style="font-family:var(--font-mono);color:var(--green);min-width:16px">3.</span>
+          <span style="color:var(--muted)">Abrís <span style="color:var(--text)">Google Sheets "Planta Looker Studio"</span> → menú <span style="font-family:var(--font-mono);color:var(--green)">🏭 Planta → Actualizar datos ahora</span></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px">
+          <span style="font-family:var(--font-mono);color:var(--green);min-width:16px">4.</span>
+          <span style="color:var(--muted)">Me mandás los archivos actualizados y te genero el <span style="color:var(--text)">HTML nuevo en minutos</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ══ PÁGINA 3: MANTENIMIENTO ══ -->
+<div id="page-mantenimiento" class="page" style="display:none">
+
+  <div class="kpi-row">
+    <div class="kpi red">
+      <div class="kpi-lbl">OTs atrasadas</div>
+      <div class="kpi-val">239</div>
+      <div class="kpi-sub">Total todas las máquinas</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Sin realizar</div>
+      <div class="kpi-val">530</div>
+      <div class="kpi-sub">Preventivos + correctivos</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">Realizadas</div>
+      <div class="kpi-val">6.1k</div>
+      <div class="kpi-sub">Historial total Consuman</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-lbl">% Cumplimiento</div>
+      <div class="kpi-val">92%</div>
+      <div class="kpi-sub">Realizadas / Total OTs</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Próximos preventivos — más urgentes</div>
+      <div class="panel-badge badge-red">Todos vencidos</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr><th>Máquina</th><th>Tarea</th><th>Estado</th><th>Días</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--red);font-weight:500">F5</td>
+            <td style="color:var(--muted)">Turbinas de vacío</td>
+            <td><span class="pill pill-red">Atrasada 27d</span></td>
+            <td style="font-family:var(--font-mono);color:var(--red)">-27</td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--red);font-weight:500">F4</td>
+            <td style="color:var(--muted)">Calibración preventivo</td>
+            <td><span class="pill pill-red">Atrasada 27d</span></td>
+            <td style="font-family:var(--font-mono);color:var(--red)">-27</td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--red);font-weight:500">F6</td>
+            <td style="color:var(--muted)">Control paradas emergencia</td>
+            <td><span class="pill pill-red">Atrasada 17d</span></td>
+            <td style="font-family:var(--font-mono);color:var(--red)">-17</td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--red);font-weight:500">CORR</td>
+            <td style="color:var(--muted)">Registro / Rotación / Reemplazo</td>
+            <td><span class="pill pill-red">Atrasada 17d</span></td>
+            <td style="font-family:var(--font-mono);color:var(--red)">-17</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">OTs atrasadas por máquina</div></div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-lbl">F5</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">98</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F6</span>
+          <div class="bar-track"><div class="bar-fill" style="width:61%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">60</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F4</span>
+          <div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--red)"></div></div>
+          <span class="bar-pct" style="color:var(--red)">63</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">CORR</span>
+          <div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">18</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">OTs sin realizar por máquina</div></div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-lbl">F5</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">211</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">CORR</span>
+          <div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">113</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F6</span>
+          <div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">112</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">F4</span>
+          <div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--amber)"></div></div>
+          <span class="bar-pct" style="color:var(--amber)">94</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PÁGINA 4: CRUCE INTELIGENTE ══ -->
+<div id="page-cruce" class="page" style="display:none">
+
+  <div class="kpi-row">
+    <div class="kpi red">
+      <div class="kpi-lbl">Máquinas críticas</div>
+      <div class="kpi-val">3</div>
+      <div class="kpi-sub">F4, F5, F6 — OTs urgentes</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Efic. baja</div>
+      <div class="kpi-val">1</div>
+      <div class="kpi-sub">F6 — 73% vs objetivo</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">Producciendo bien</div>
+      <div class="kpi-val">2</div>
+      <div class="kpi-sub">F5 y Corrugadora OK</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Acción inmediata</div>
+      <div class="kpi-val">4</div>
+      <div class="kpi-sub">Preventivos vencidos</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">◆ Análisis cruce Producción + Mantenimiento</div>
+      <div class="panel-badge badge-red">4 alertas activas</div>
+    </div>
+    <div class="cruce-list">
+      <div class="cruce-item bad">
+        <div class="cruce-icon">!</div>
+        <div class="cruce-mach">F5 — JS</div>
+        <div class="cruce-desc">98 OTs atrasadas · Turbinas de vacío vencida 27d · Eficiencia 102% (máquina productiva pero con deuda crítica de mantenimiento)</div>
+        <button class="cruce-btn" onclick="showPage('mantenimiento',document.querySelectorAll('.nav-tab')[2])">Ver OTs</button>
+      </div>
+      <div class="cruce-item bad">
+        <div class="cruce-icon">!</div>
+        <div class="cruce-mach">F4 — Curioni</div>
+        <div class="cruce-desc">63 OTs atrasadas · Calibración preventivo vencida 27d · Eficiencia 91% (riesgo de falla si no se interviene)</div>
+        <button class="cruce-btn" onclick="showPage('mantenimiento',document.querySelectorAll('.nav-tab')[2])">Ver OTs</button>
+      </div>
+      <div class="cruce-item bad">
+        <div class="cruce-icon">⚠</div>
+        <div class="cruce-mach">F6 — QH</div>
+        <div class="cruce-desc">60 OTs atrasadas · Eficiencia 73% (bajo umbral 85%) · Control paradas emergencia vencido 17d · Posible relación falla-eficiencia</div>
+        <button class="cruce-btn" onclick="showPage('produccion',document.querySelectorAll('.nav-tab')[1])">Analizar</button>
+      </div>
+      <div class="cruce-item warn">
+        <div class="cruce-icon">⚠</div>
+        <div class="cruce-mach">CORR</div>
+        <div class="cruce-desc">18 OTs atrasadas · Registro/Rotación vencido 17d · Eficiencia 103% (productiva) · Programar intervención preventiva</div>
+        <button class="cruce-btn">Programar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Eficiencia vs OTs atrasadas — visión consolidada</div></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Máquina</th>
+            <th>Eficiencia %</th>
+            <th>OTs atrasadas</th>
+            <th>Sin realizar</th>
+            <th>Próximo preventivo</th>
+            <th>Recomendación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--amber);font-weight:500">F5</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">102%</td>
+            <td style="color:var(--red);font-family:var(--font-mono);font-weight:500">98</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">211</td>
+            <td style="color:var(--muted)">Turbinas vacío (venc. 27d)</td>
+            <td><span class="pill pill-red">Intervención urgente</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--amber);font-weight:500">F4</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">91%</td>
+            <td style="color:var(--red);font-family:var(--font-mono);font-weight:500">63</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">94</td>
+            <td style="color:var(--muted)">Calibración prev. (venc. 27d)</td>
+            <td><span class="pill pill-red">Intervención urgente</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--red);font-weight:500">F6</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">73%</td>
+            <td style="color:var(--red);font-family:var(--font-mono);font-weight:500">60</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">112</td>
+            <td style="color:var(--muted)">Control paradas (venc. 17d)</td>
+            <td><span class="pill pill-red">Efic. baja + OTs urgentes</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--green);font-weight:500">CORR</td>
+            <td style="color:var(--green);font-family:var(--font-mono)">103%</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">18</td>
+            <td style="color:var(--amber);font-family:var(--font-mono)">113</td>
+            <td style="color:var(--muted)">Registro/rotación (venc. 17d)</td>
+            <td><span class="pill pill-amber">Programar preventivo</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(id, tab) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).style.display = 'flex';
+  if (tab) tab.classList.add('active');
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = `En vivo · ${h}:${m} hs`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+</script>
+</body>
+</html>
