@@ -182,7 +182,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
     </div>
     <div class="kpi red">
       <div class="kpi-lbl">OTs atrasadas</div>
-      <div class="kpi-val">16</div>
+      <div class="kpi-val">92</div>
       <div class="kpi-sub">OTs atrasadas · menor impacto</div>
     </div>
     <div class="kpi amber">
@@ -195,7 +195,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
   <div class="panel">
     <div class="panel-head">
       <div class="panel-title">Estado de máquinas</div>
-      <div class="panel-badge badge-red">196 OTs atrasadas</div>
+      <div class="panel-badge badge-red">344 OTs atrasadas</div>
     </div>
     <div class="mach-grid">
       <div class="mach ok" onclick="showPage('produccion',document.querySelectorAll('.nav-tab')[1]);alert('F5 — JS\nEficiencia: 102%\nm² producidos: 1.091.312\nOTs sin realizar: 211\nOTs atrasadas: 98')">
@@ -553,7 +553,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
   <div class="panel">
     <div class="panel-head">
       <div class="panel-title">Próximos preventivos — más urgentes</div>
-      <div class="panel-badge badge-red">196 OTs atrasadas</div>
+      <div class="panel-badge badge-red">344 OTs atrasadas</div>
     </div>
     <div style="overflow-x:auto">
       <table class="data-table">
@@ -674,7 +674,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
   <div class="panel">
     <div class="panel-head">
       <div class="panel-title">◆ Análisis cruce Producción + Mantenimiento</div>
-      <div class="panel-badge badge-red">196 OTs atrasadas</div>
+      <div class="panel-badge badge-red">344 OTs atrasadas</div>
     </div>
     <div class="cruce-list">
       <div class="cruce-item bad">
@@ -777,7 +777,7 @@ setInterval(updateClock, 30000);
 </script>
 
 <script>
-const DATOS = {"efic_maquinistas": {"A": {"nombre": "Juli R.", "maq": "F5", "meses": {"2026-01": 70.6, "2026-02": 70.7, "2026-03": 68.8, "2026-04": 59.1, "2026-05": 1.0}, "efic_mes": 1.0}, "B": {"nombre": "Dami C.", "maq": "F5", "meses": {"2026-01": 68.2, "2026-02": 75.2, "2026-03": 66.1, "2026-04": 63.1, "2026-05": 41.7}, "efic_mes": 41.7}, "F": {"nombre": "Marian G.", "maq": "F5", "meses": {}, "efic_mes": 0.0}, "C": {"nombre": "Manu F.", "maq": "F4", "meses": {"2026-01": 52.4, "2026-02": 50.3, "2026-03": 41.8, "2026-04": 67.6, "2026-05": 65.9}, "efic_mes": 65.9}, "D": {"nombre": "Fabi S.", "maq": "F4", "meses": {"2026-01": 59.9, "2026-03": 81.7, "2026-04": 77.6}, "efic_mes": 0.0}, "E": {"nombre": "Facu Smith", "maq": "F4", "meses": {"2026-01": 68.8, "2026-03": 77.5}, "efic_mes": 0.0}, "G": {"nombre": "Facu Ben.", "maq": "F5", "meses": {"2026-01": 67.9, "2026-02": 54.7, "2026-03": 46.9, "2026-04": 48.0, "2026-05": 45.2}, "efic_mes": 45.2}, "H": {"nombre": "Nico A.", "maq": "F4", "meses": {"2026-01": 59.6, "2026-02": 51.4, "2026-03": 64.2, "2026-04": 66.8, "2026-05": 52.5}, "efic_mes": 52.5}, "I": {"nombre": "Dante G.", "maq": "F4", "meses": {"2026-01": 68.3, "2026-02": 53.3, "2026-03": 67.9, "2026-04": 60.3, "2026-05": 88.5}, "efic_mes": 88.5}}, "efic_por_mes_real": {"2026-01": {"imp": 75.6, "cor": 71.6}, "2026-02": {"imp": 72.7, "cor": 77.8}, "2026-03": {"imp": 74.9, "cor": 77.1}, "2026-04": {"imp": 73.8, "cor": 76.3}, "2026-05": {"imp": 63.3, "cor": 88.0}}, "monthly_imp": {"2026-01": {"F4": 781371, "F5": 1063394, "F6": 261080}, "2026-02": {"F4": 660103, "F5": 1149330, "F6": 235417}, "2026-03": {"F4": 713588, "F5": 1167950, "F6": 280770}, "2026-04": {"F4": 538994, "F5": 820586, "F6": 246756}, "2026-05": {"F4": 20555, "F5": 46529, "F6": 0}}, "monthly_imp_total": [{"mes_str": "2026-01", "m2": 2105845}, {"mes_str": "2026-02", "m2": 2044850}, {"mes_str": "2026-03", "m2": 2162308}, {"mes_str": "2026-04", "m2": 1606336}, {"mes_str": "2026-05", "m2": 67084}], "balance": [{"mes_str": "2026-01", "label": "Ene", "corru": 1916226, "imp": 2105845, "stock": -189619}, {"mes_str": "2026-02", "label": "Feb", "corru": 1770622, "imp": 2044850, "stock": -274228}, {"mes_str": "2026-03", "label": "Mar", "corru": 1841940, "imp": 2162308, "stock": -320368}, {"mes_str": "2026-04", "label": "Abr", "corru": 1259518, "imp": 1606336, "stock": -346818}, {"mes_str": "2026-05", "label": "May", "corru": 40751, "imp": 67084, "stock": -26333}]};
+const DATOS = {"efic_maquinistas": {"A": {"nombre": "Juli R.", "maq": "F5", "meses": {"2026-01": 70.6, "2026-02": 70.7, "2026-03": 68.8, "2026-04": 59.1, "2026-05": 73.7}, "efic_mes": 73.7}, "B": {"nombre": "Dami C.", "maq": "F5", "meses": {"2026-01": 68.2, "2026-02": 75.2, "2026-03": 66.1, "2026-04": 63.1, "2026-05": 43.2}, "efic_mes": 43.2}, "F": {"nombre": "Marian G.", "maq": "F5", "meses": {}, "efic_mes": 0.0}, "C": {"nombre": "Manu F.", "maq": "F4", "meses": {"2026-01": 52.4, "2026-02": 50.3, "2026-03": 41.8, "2026-04": 67.6, "2026-05": 59.9}, "efic_mes": 59.9}, "D": {"nombre": "Fabi S.", "maq": "F4", "meses": {"2026-01": 59.9, "2026-03": 81.7, "2026-04": 77.6}, "efic_mes": 0.0}, "E": {"nombre": "Facu Smith", "maq": "F4", "meses": {"2026-01": 68.8, "2026-03": 77.5}, "efic_mes": 0.0}, "G": {"nombre": "Facu Ben.", "maq": "F5", "meses": {"2026-01": 67.9, "2026-02": 54.7, "2026-03": 46.9, "2026-04": 48.0, "2026-05": 44.5}, "efic_mes": 44.5}, "H": {"nombre": "Nico A.", "maq": "F4", "meses": {"2026-01": 59.6, "2026-02": 51.4, "2026-03": 64.2, "2026-04": 66.8, "2026-05": 40.1}, "efic_mes": 40.1}, "I": {"nombre": "Dante G.", "maq": "F4", "meses": {"2026-01": 68.3, "2026-02": 53.3, "2026-03": 67.9, "2026-04": 60.3, "2026-05": 68.0}, "efic_mes": 68.0}}, "efic_por_mes_real": {"2026-01": {"imp": 75.6, "cor": 71.6}, "2026-02": {"imp": 72.7, "cor": 77.8}, "2026-03": {"imp": 74.9, "cor": 77.1}, "2026-04": {"imp": 73.8, "cor": 76.3}, "2026-05": {"imp": 58.0, "cor": 81.1}}, "monthly_imp": {"2026-01": {"F4": 781371, "F5": 1063394, "F6": 261080}, "2026-02": {"F4": 660103, "F5": 1149330, "F6": 235417}, "2026-03": {"F4": 713588, "F5": 1167950, "F6": 280770}, "2026-04": {"F4": 538994, "F5": 820586, "F6": 246756}, "2026-05": {"F4": 20555, "F5": 46529, "F6": 0}}, "monthly_imp_total": [{"mes_str": "2026-01", "m2": 2105845}, {"mes_str": "2026-02", "m2": 2044850}, {"mes_str": "2026-03", "m2": 2162308}, {"mes_str": "2026-04", "m2": 1606336}, {"mes_str": "2026-05", "m2": 67084}], "balance": [{"mes_str": "2026-01", "label": "Ene", "corru": 1916226, "imp": 2105845, "stock": -189619}, {"mes_str": "2026-02", "label": "Feb", "corru": 1770622, "imp": 2044850, "stock": -274228}, {"mes_str": "2026-03", "label": "Mar", "corru": 1841940, "imp": 2162308, "stock": -320368}, {"mes_str": "2026-04", "label": "Abr", "corru": 1259518, "imp": 1606336, "stock": -346818}, {"mes_str": "2026-05", "label": "May", "corru": 40751, "imp": 67084, "stock": -26333}]};
 </script>
 </body>
 </html>
