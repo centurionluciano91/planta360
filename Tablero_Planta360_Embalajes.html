@@ -3830,4 +3830,29 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 </script>
+
+<script>
+// Fix navegación pestañas — sobreescribe showPage después de cargar
+document.addEventListener('DOMContentLoaded', function() {
+  // Mostrar general al cargar
+  var pages = document.querySelectorAll('.page');
+  pages.forEach(function(p) { p.style.display = 'none'; });
+  var gen = document.getElementById('page-general');
+  if (gen) gen.style.display = 'flex';
+  // Sobreescribir showPage
+  window.showPage = function(id, tab) {
+    document.querySelectorAll('.page').forEach(function(p) { p.style.display = 'none'; });
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    var page = document.getElementById('page-' + id);
+    if (page) page.style.display = 'flex';
+    if (tab) tab.classList.add('active');
+    setTimeout(function() {
+      if (id === 'produccion') { if(typeof dibujarTendencia==='function') dibujarTendencia(); if(typeof renderTF==='function') renderTF(); if(typeof renderMensual==='function') renderMensual(); if(typeof renderAnual==='function') renderAnual(); if(typeof renderCumplimiento==='function') renderCumplimiento(); }
+      if (id === 'general') { if(typeof renderGeneral==='function') renderGeneral(); }
+      if (id === 'mantenimiento') { if(typeof renderMantenimiento==='function') renderMantenimiento(); }
+      if (id === 'equipos') { if(typeof renderEquipos==='function') renderEquipos(); if(typeof initEqBtns==='function') initEqBtns(); }
+    }, 50);
+  };
+});
+</script>
 </body></html>
