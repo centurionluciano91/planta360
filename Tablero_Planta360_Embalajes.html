@@ -169,13 +169,13 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
   <div class="kpi-row">
     <div class="kpi green">
       <div class="kpi-lbl">Impresoras — Mayo</div>
-      <div class="kpi-val">62%</div>
+      <div class="kpi-val">61%</div>
       <div class="kpi-sub">F4·F5·F6 · 405k m² este mes</div>
     </div>
     <div class="kpi green">
       <div class="kpi-lbl">Impresoras — 2026</div>
       <div class="kpi-val">8.32M</div>
-      <div class="kpi-sub">74% efic. · producción real año</div>
+      <div class="kpi-sub">73% efic. · producción real año</div>
     </div>
     <div class="kpi red">
       <div class="kpi-lbl">OTs atrasadas</div>
@@ -197,7 +197,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
     <div class="mach-grid">
       <div class="mach green" onclick="abrirModal('F5')">
         <div class="mach-id"><span class="dot"></span>F5 — JS</div>
-        <div class="mach-name">90k m² este mes · tocá para ver OTs</div><div class="mach-stat">62.4% efic. · 27 OTs atrasadas</div>
+        <div class="mach-name">90k m² este mes · tocá para ver OTs</div><div class="mach-stat">61.2% efic. · 27 OTs atrasadas</div>
         <span class="mach-pill">OK</span>
       </div>
       <div class="mach green" onclick="abrirModal('F4')">
@@ -231,20 +231,20 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
       <div class="panel-head"><div class="panel-title">Eficiencia — Mayo 2026</div></div>
       <div class="bar-chart" id="bar-efic-general"><div class="bar-row">
       <span class="bar-lbl" style="width:52px">CORR</span>
-      <div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--amber)"></div></div>
-      <span class="bar-pct" style="color:var(--amber);width:54px">77.2%</span>
+      <div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--amber)"></div></div>
+      <span class="bar-pct" style="color:var(--amber);width:54px">80.4%</span>
     </div><div class="bar-row">
       <span class="bar-lbl" style="width:52px">F5</span>
-      <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--red)"></div></div>
-      <span class="bar-pct" style="color:var(--red);width:54px">62.4%</span>
+      <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--red)"></div></div>
+      <span class="bar-pct" style="color:var(--red);width:54px">61.2%</span>
     </div><div class="bar-row">
       <span class="bar-lbl" style="width:52px">F4</span>
-      <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--red)"></div></div>
-      <span class="bar-pct" style="color:var(--red);width:54px">62.4%</span>
+      <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--red)"></div></div>
+      <span class="bar-pct" style="color:var(--red);width:54px">61.2%</span>
     </div><div class="bar-row">
       <span class="bar-lbl" style="width:52px">F6</span>
-      <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--red)"></div></div>
-      <span class="bar-pct" style="color:var(--red);width:54px">62.4%</span>
+      <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--red)"></div></div>
+      <span class="bar-pct" style="color:var(--red);width:54px">61.2%</span>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">OTs atrasadas — Consuman</div></div>
@@ -274,17 +274,17 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);fo
   <div class="kpi-row">
     <div class="kpi green">
       <div class="kpi-lbl">F5 — Mayo</div>
-      <div class="kpi-val">62%</div>
+      <div class="kpi-val">61%</div>
       <div class="kpi-sub">7 reg · 132k m²</div>
     </div>
     <div class="kpi green">
       <div class="kpi-lbl">F4 — Mayo</div>
-      <div class="kpi-val">62%</div>
+      <div class="kpi-val">61%</div>
       <div class="kpi-sub">7 reg · 183k m²</div>
     </div>
     <div class="kpi green">
       <div class="kpi-lbl">F6 — Mayo</div>
-      <div class="kpi-val">62%</div>
+      <div class="kpi-val">61%</div>
       <div class="kpi-sub">4 reg · 90k m²</div>
     </div>
     <div class="kpi green">
@@ -3755,6 +3755,31 @@ function cerrarModalCorru(){
 </div>
 
 
+
+<script>
+// Fix navegación pestañas — sobreescribe showPage después de cargar
+document.addEventListener('DOMContentLoaded', function() {
+  // Mostrar general al cargar
+  var pages = document.querySelectorAll('.page');
+  pages.forEach(function(p) { p.style.display = 'none'; });
+  var gen = document.getElementById('page-general');
+  if (gen) gen.style.display = 'flex';
+  // Sobreescribir showPage
+  window.showPage = function(id, tab) {
+    document.querySelectorAll('.page').forEach(function(p) { p.style.display = 'none'; });
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    var page = document.getElementById('page-' + id);
+    if (page) page.style.display = 'flex';
+    if (tab) tab.classList.add('active');
+    setTimeout(function() {
+      if (id === 'produccion') { if(typeof dibujarTendencia==='function') dibujarTendencia(); if(typeof renderTF==='function') renderTF(); if(typeof renderMensual==='function') renderMensual(); if(typeof renderAnual==='function') renderAnual(); if(typeof renderCumplimiento==='function') renderCumplimiento(); }
+      if (id === 'general') { if(typeof renderGeneral==='function') renderGeneral(); }
+      if (id === 'mantenimiento') { if(typeof renderMantenimiento==='function') renderMantenimiento(); }
+      if (id === 'equipos') { if(typeof renderEquipos==='function') renderEquipos(); if(typeof initEqBtns==='function') initEqBtns(); }
+    }, 50);
+  };
+});
+</script>
 
 <script>
 // Fix navegación pestañas — sobreescribe showPage después de cargar
