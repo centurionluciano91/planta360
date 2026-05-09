@@ -3905,4 +3905,29 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 </script>
+
+<style>/* PLANTA360-NAV-FIX */
+#page-general{display:flex}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var showPageOrig = window.showPage;
+  window.showPage = function(id, tab){
+    document.querySelectorAll('.page').forEach(function(p){p.style.display='none';});
+    document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+    var p = document.getElementById('page-'+id);
+    if(p) p.style.display='flex';
+    if(tab) tab.classList.add('active');
+    setTimeout(function(){
+      try{
+        if(id==='produccion'){dibujarTendencia&&dibujarTendencia();renderTF&&renderTF();renderMensual&&renderMensual();renderAnual&&renderAnual();renderCumplimiento&&renderCumplimiento();}
+        if(id==='general'){renderGeneral&&renderGeneral();}
+        if(id==='mantenimiento'){renderMantenimiento&&renderMantenimiento();}
+        if(id==='equipos'){renderEquipos&&renderEquipos();initEqBtns&&initEqBtns();}
+        if(id==='cruce'){renderCruce&&renderCruce();}
+      }catch(e){console.warn('render error:',e);}
+    },50);
+  };
+});
+</script>
 </body></html>
